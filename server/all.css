@@ -1,0 +1,27 @@
+body
+{
+	background-color:RoyalBlue;
+	/*
+	background-image
+	background-repeat
+	background-attachment
+	background-position
+	*/
+}
+
+table, td, th
+{
+	border:no-border;
+	width:50%;
+}
+
+th
+{
+	color:Black;
+	background-image:url('flowers.png');
+	background-repeat:no-repeat;
+	background-position:right top;
+	text-align:left;
+	font-family:"Times New Roman", Times, serif;
+	font-size:18px;
+}

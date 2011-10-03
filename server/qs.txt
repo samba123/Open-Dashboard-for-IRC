@@ -1,0 +1,4 @@
+while trying to create primary in a 40GB table in mysql, got error SQL table full, can you suggest?
+mysql : cannot connect to mysql after a query in mysql crashed, what should I do?
+For php how to install libphp?
+in linux How to open a terminal?

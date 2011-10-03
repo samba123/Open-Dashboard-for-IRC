@@ -1,0 +1,293 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/fonts/fonts-min.css" />
+<!-- Sam Skin CSS for TabView -->
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/tabview/assets/skins/sam/tabview.css">
+<!-- JavaScript Dependencies for Tabview: -->
+<script src="http://yui.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script src="http://yui.yahooapis.com/2.9.0/build/element/element-min.js"></script>
+<!-- OPTIONAL: Connection (required for dynamic loading of data) -->
+<script src="http://yui.yahooapis.com/2.9.0/build/connection/connection-min.js"></script>
+<!-- Source file for TabView -->
+<script src="http://yui.yahooapis.com/2.9.0/build/tabview/tabview-min.js"></script>
+<script type="text/javascript" src="yahoo.js"></script>
+<script type="text/javascript" src="connection.js"></script>
+<script type="text/javascript" src="zxml.js"></script>
+
+<style type="text/css">
+.yui-navset div.loading div {
+    background:url(assets/loading.gif) no-repeat center center;
+    height:8em; /* hold some space while loading */
+}
+
+.yui-navset div.loading div * {
+    display: none;
+}
+
+.yui-content div {
+	overflow: scroll;
+	height: 100%
+}
+</style>
+
+<script type="text/javascript">
+	var userid = 'Sagar' ;
+	var qtabView = new YAHOO.widget.TabView();
+	var atabView = new YAHOO.widget.TabView();
+	var qtab = null ;
+	var atab = null ;
+	
+	function addQTab(labelText)
+	{   
+		qtabView.addTab( 
+		new YAHOO.widget.Tab( 
+			{ 
+				id: labelText, 
+				label: labelText,
+				active: true,
+				dataSrc: 'http://www.cse.iitm.ac.in/~sagarmb/getTopic.php?tid=' + labelText, 
+				cacheData: true
+			})
+		);
+	}
+	
+	function addATab(idText)
+	{
+		var id = idText.split('_');
+		var qid = id[0];
+		var tid = id[1];
+		var labelText = '[' + tid + ':' + qid + ']';
+		
+		atabView.addTab( 
+		new YAHOO.widget.Tab( 
+			{ 
+				id: idText, 
+				label: labelText,
+				active: true, 
+				dataSrc: 'http://www.cse.iitm.ac.in/~sagarmb/getAns.php?qid=' + qid + '&tid=' + tid, 
+				cacheData: true
+			})
+		);
+	}
+	
+	function addTopics()
+	{
+	}
+	
+	function addUsers()
+	{
+	}
+	
+	function postQue()
+	{
+		if ( document.getElementById('ques').value == '' )
+		{
+			alert("Please enter your question") ;
+		}
+		else
+		{	
+			var query = userid + ':' + document.getElementById('ques').value ;
+            
+            var oCallback = {
+                success: function (oResponse) {
+                	var response = oResponse.responseText.split('_');
+                	
+                	var qid = response[0];
+                	var tid = response[1];
+                	var idText = qid + '_' + tid;
+                    var labelText = '[' + tid + ':' + qid + ']';
+                    
+                    addQTab(tid);
+                    addATab(idText, labelText);
+                },
+                failure: function (oResponse) {
+                    alert("Failed to post");
+                }
+            };
+            YAHOO.util.Connect.asyncRequest("GET", 
+                                     "http://www.cse.iitm.ac.in/~sagarmb/postQue.php?ques=" + query, oCallback);
+        }
+	}
+	
+	function postAns()
+	{
+		if ( document.getElementById('ans').value == '' )
+		{
+			alert("Please enter your answer") ;
+		}
+		else
+		{	
+			var answer = userid + ':' + document.getElementById('ans').value ;
+            
+            var oCallback = {
+                success: function (oResponse) {
+                	var response = oResponse.responseText.split(' ');
+                	var qid = response[0];
+                	var tid = response[1];
+                    alert(qid + ' ' + tid);
+                },
+                failure: function (oResponse) {
+                    alert("Failed to post");
+                }
+            };
+            YAHOO.util.Connect.asyncRequest("GET", 
+                                     "postAns.php?qid=" + + "&tid=" + + "&ans=" + answer, oCallback);
+        }
+	}
+	
+	
+	
+</script>
+
+<title> Y! Open </title>
+</head>
+
+<body class="yui-skin-sam">
+<div id="container" style="width:100%">
+<div id="header" style="height:50px;">
+	<b>Hi Guest</b>
+	<a href="">Logout</a>
+</div>
+
+<div id="content">
+	<div id="topics" style="width:12%; float:left;">
+	<input type="button" value="addTab" onclick="addQTab('Sachin')">
+	</div>
+	
+	<div id="qa" style="width:73%; height:550px; float:left;">
+		<div id="post_que" style="height:50px">
+			<input type="text" size="100" id="ques"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" value="Ask Question" onclick="postQue()">
+		</div>
+		
+		<div id="que_tab" style="height:200px;"></div>
+		
+		<div id="post_ans" style="height:80px; margin-bottom:0;">
+			<br/><br/><br/>
+			<input type="text" size="100" id="ans"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" value="Answer" onclick="postAns()">
+		</div>
+		
+		<div id="ans_tab" style="height:220px;"></div>
+	</div>
+	
+	<div id="users" style="width:15%; float:right;">
+	</div>
+</div>
+
+<div id="copyright" style="clear:both;">
+<center> Copyright &copy; 2011 Sagar, Pankaj, Sachin and Harsh </center>
+</div>
+
+</div>
+</body>
+
+<script type="text/javascript">
+	
+	(function() 
+	{
+		qtabView.appendTo('que_tab');
+		atabView.appendTo('ans_tab');
+		addTopics() ;
+		addUsers() ;
+		// addQTab ("abc_xyz");
+	})();
+
+var oXHR = null;
+var iInterval = 1000;
+var divNotification = null;
+
+function checkComments() {
+    if (!oXHR) {
+    	// alert('correct ');
+        oXHR = zXmlHttp.createRequest();
+    } else if (oXHR.readyState != 0) {
+        oXHR.abort();
+    }    
+
+	var tid;
+   	var pid;
+   	var qid;
+   	var qtid;
+
+	if (qtabView.get('activeTab') != null) 
+		tid = qtabView.get('activeTab').get('id');
+	else 
+		tid = null;	
+		
+	if (atabView.get('activeTab') != null)
+    {
+    	pid = atabView.get('activeTab').get('id').split('_');
+    	qid = pid[0] ;
+    	qtid = pid[1] ;
+	}	
+	else
+	{
+		pid = null;
+    	qid = null ;
+    	qtid = null;
+	}	    
+	
+    oXHR.open('GET', 'http://www.cse.iitm.ac.in/~sagarmb/poll.php?tid=' + tid + '&qid=' + qid + '&qtid=' + qtid, true);
+    // alert('before getting ready');
+    
+    oXHR.onreadystatechange = function () {               
+    	    
+        if (oXHR.readyState == 4) {
+            if (oXHR.status == 200) {
+
+                var aData = oXHR.responseXML;
+  			  //  alert("Done");
+  			  
+  			  parser=new DOMParser();
+			  xmlDoc=parser.parseFromString(aData,"text/xml");
+                
+                
+                
+                /*                alert("XML :"+aData);
+                parser=new DOMParser();
+				xmlDoc=parser.parseFromString(aData,"text/xml");
+                aData = "<root>"+xmlDoc+"</root>";
+
+	*/
+				if(xmlDoc != null)	           	
+			{	
+				x = xmlDoc.getElementsByTagName("questions");
+				if (x!=null)
+				{
+					y =0;		////
+					if(x.childNodes)     /////
+						y = x.childNodes.length;
+							var trans = xmlDoc.getElementsByTagName("transcript");
+					        console.log(trans);
+				//	alert("asdas"+y);
+						
+				}
+				else
+					alert('danger');	
+			
+           		//alert(ques);
+           		
+}
+            }
+            setTimeout(checkComments, iInterval);        
+        }
+       };                      
+     
+    oXHR.send(null);       
+
+
+}
+
+//if Ajax is enabled, assign event handlers and begin fetching
+window.onload = function () {
+    if (zXmlHttp.isSupported()) {
+        // alert('supported');
+        checkComments();              
+    }
+};
+
+</script>
+
+</html>
+
