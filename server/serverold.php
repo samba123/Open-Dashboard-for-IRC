@@ -15,16 +15,16 @@ while ($tok !== false) {
 
 $ch = curl_init();
 $postvars = array();
-$postvars['appid'] = 'Mfog.UbV34GAgGCZwGU6wTWMICmEFiUWC.Shukz8rrXayhEzoLxY.HlA4d8_b0JP';
+$postvars['appid'] = '<appid>';
 //$postvars['context'] =$q;
 $postvars['context'] = 'Sagar: while trying to create primary in a 40GB table in mysql, got error SQL table full. can you suggest?';
 $postvars['query']='mysql';
 $postvars['output']='json';
 curl_setopt($ch,CURLOPT_VERBOSE,true);
 
-curl_setopt($ch,CURLOPT_PROXY,'proxy.iitm.ac.in:3128');
+curl_setopt($ch,CURLOPT_PROXY,'<proxy>:<port>');
 
-curl_setopt($ch,CURLOPT_PROXYUSERPWD,'cs10m053:newg53uys');
+curl_setopt($ch,CURLOPT_PROXYUSERPWD,'<user>:<pass>');
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postvars));
 
